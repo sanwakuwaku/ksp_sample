@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.devtools.ksp'
 }
 
 android {
@@ -37,18 +38,43 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.2.0'
+        kotlinCompilerExtensionVersion '1.4.0'
     }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+
+    sourceSets {
+        main.java.srcDirs += "$buildDir/generated/ksp/main/kotlin"
+    }
+
+    // IDEにKSP生成コードを認識させる
+    kotlin.sourceSets {
+        debug {
+            kotlin.srcDir("build/generated/ksp/debug/kotlin")
+        }
+        release {
+            kotlin.srcDir("build/generated/ksp/release/kotlin")
+        }
+    }
+
+    // android studio electric eelでは下記だとうまくいかなかった
+//    applicationVariants.all { variant ->
+//        kotlin.sourceSets {
+//            def name = variant.name
+//            getByName(name) {
+//                kotlin.srcDir("build/generated/ksp/$name/kotlin")
+//            }
+//        }
+//    }
 }
+
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.activity:activity-compose:1.3.1'
     implementation "androidx.compose.ui:ui:$compose_version"
@@ -60,4 +86,7 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.8.0'
+    implementation project(':logshroom')
+    ksp project(':logshroom')
 }
