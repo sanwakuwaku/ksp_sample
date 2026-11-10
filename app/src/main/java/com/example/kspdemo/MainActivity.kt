@@ -17,6 +17,8 @@ import jp.sanwakuwaku.logshroom.LogShroom
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // @LogShroom で生成された拡張関数で、引数をログに出す
+        logOnCreate(savedInstanceState)
         setContent {
             KspDemoTheme {
                 // A surface container using the 'background' color from the theme
